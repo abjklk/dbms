@@ -1,0 +1,122 @@
+EXAMPLE 1: prints PL-SQL 5 times
+
+begin
+for i in 1..5 loop
+dbms_output.put_line('PL-SQL');
+end loop;
+end;
+/
+
+
+
+EXAMPLE 2: prints numbers 1 to 5
+
+begin
+for i in 1..5 loop
+dbms_output.put_line(i);
+end loop;
+end;
+/
+
+
+
+
+
+EXAMPLE 3: reversing the for loop
+
+begin
+for i in reverse 1..5 loop
+dbms_output.put_line(i);
+end loop;
+end;
+/
+
+
+
+
+
+
+
+EXAMPLE 4: prints 1 to 5 using while loop
+
+
+declare
+i int;
+begin
+i:=1;
+while i<=5 loop
+dbms_output.put_line(i);
+end loop;
+end;
+/
+
+
+
+EXAMPLE 5: prints all even number between 1 to 10
+
+declare
+i int;
+begin
+i:=1;
+while i<=10 loop
+if mod(i,2)=0 then
+dbms_output.put_line(i);
+end if;
+i:=i+1;
+end loop;
+end;
+/
+
+
+
+
+
+EXAMPLE 6: WHILE LOOP using EXIT and EXIT WHEN statements
+
+declare
+i int;
+begin
+i:=1;
+while i<=5 loop
+if i=3 then
+exit;
+end if;
+dbms_output.put_line(i);
+i:=i+1;
+end loop;
+end;
+/
+
+
+
+
+
+declare
+i int;
+begin
+i:=1;
+while i<=5 loop
+exit when i=3;
+dbms_output.put_line(i);
+end loop;
+end;
+/
+
+
+
+
+
+
+EXAMPLE 7: SIMPLE LOOP example
+
+declare
+i int;
+begin
+i:=1;
+loop
+dbms_output.put_line(i);
+i:=i+1;
+exit when i>5;
+end loop;
+end;
+/

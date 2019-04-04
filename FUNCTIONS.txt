@@ -1,0 +1,372 @@
+
+
+SQL> select deptno from department where dname='ACCOUNTING';
+
+    DEPTNO
+----------
+        10
+
+
+
+
+SQL> create or replace function dis(name in varchar2(30))
+  2  return number
+  3  as
+  4  dno number;
+  5  begin
+  6  select deptno into dno where dname=name;
+  7  return dno;
+  8  end;
+  9  /
+
+Warning: Function created with compilation errors.
+
+SQL> show errors;
+Errors for FUNCTION DIS:
+
+LINE/COL ERROR
+-------- -----------------------------------------------------------------
+1/30     PLS-00103: Encountered the symbol "(" when expecting one of the
+         following:
+         := . ) , @ % default character
+         The symbol ":=" was substituted for "(" to continue.
+
+6/24     PLS-00103: Encountered the symbol "WHERE" when expecting one of
+         the following:
+         . ( , % from
+
+
+
+
+SQL> create or replace function dis(name in varchar2(30))
+  2  return number
+  3  as
+  4  dno number;
+  5  begin
+  6  select deptno into dno from department where dname=name;
+  7  return dno;
+  8  end;
+  9  /
+
+Warning: Function created with compilation errors.
+
+SQL> show errors;
+Errors for FUNCTION DIS:
+
+LINE/COL ERROR
+-------- -----------------------------------------------------------------
+1/30     PLS-00103: Encountered the symbol "(" when expecting one of the
+         following:
+         := . ) , @ % default character
+         The symbol ":=" was substituted for "(" to continue.
+
+
+
+
+
+
+
+SQL>  create or replace function dis(name in string)
+  2   return number
+  3   as
+  4   dno number;
+  5   begin
+  6   select deptno into dno from department where dname=name;
+  7   return dno;
+  8   end;
+  9   /
+
+Function created.
+
+SQL> select dis(ACCOUNTING) from dual;
+select dis(ACCOUNTING) from dual
+           *
+ERROR at line 1:
+ORA-00904: invalid column name
+
+
+SQL> select dis('ACCOUNTING') from dual;
+     select sysdate from dual;
+     select user from dual;
+     select * from dual;
+     desc dual; // for describing
+
+DIS('ACCOUNTING')
+-----------------
+               10
+
+
+SQL> select dis('accounting') from dual;
+
+DIS('ACCOUNTING')
+-----------------
+
+
+
+
+
+
+SQL>  create or replace function dis(dno in number)
+  2  return string
+  3  as
+  4  name string;
+  5  begin
+  6  select dname into name from department where deptno=dno;
+  7  return name;
+  8  end;
+  9  /
+
+Warning: Function created with compilation errors.
+
+SQL> show errors;
+Errors for FUNCTION DIS:
+
+LINE/COL ERROR
+-------- -----------------------------------------------------------------
+4/6      PLS-00215: String length constraints must be in range (1 ..
+         32767)
+
+
+
+
+
+
+SQL>  create or replace function dis(dno in number)
+  2  return string
+  3  as
+  4  name string(20);
+  5    begin
+  6    select dname into name from department where deptno=dno;
+  7    return name;
+  8    end;
+  9    /
+
+Function created.
+
+SQL> select dis(10) from dual;
+
+DIS(10)
+--------------------------------------------------------------------------------
+ACCOUNTING
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+SQL> create or replace function change(x in number
+  2  )
+  3  return number as
+  4  begin
+  5  x:=2;
+  6  return(x);
+  7  end;
+  8  /
+
+Warning: Function created with compilation errors.
+
+SQL> set serveroutput on;
+SQL> show errors;
+Errors for FUNCTION CHANGE:
+LINE/COL ERROR
+-------- -----------------------------------------------------------------
+5/1      PLS-00363: expression 'X' cannot be used as an assignment target
+5/1      PL/SQL: Statement ignored
+
+
+SQL>  create or replace function change(x in number
+  2   )
+  3   return number as
+  4   begin
+  5  y number;
+  6  y:=x;
+  7  return(x);
+  8  end;
+  9  /
+
+Warning: Function created with compilation errors.
+
+SQL> show errors;
+Errors for FUNCTION CHANGE:
+LINE/COL ERROR
+-------- -----------------------------------------------------------------
+5/3      PLS-00103: Encountered the symbol "NUMBER" when expecting one of
+         the following:
+         := . ( @ % ;
+         The symbol ":=" was substituted for "NUMBER" to continue.
+
+
+
+
+
+
+SQL>   create or replace function change(x in number
+  2    )
+  3    return number as
+  4  y number;
+  5  begin
+  6  y:=x;
+  7  return(x);
+  8  end;
+  9  /
+
+Function created.
+
+SQL> select change(10) from dual;
+
+CHANGE(10)
+----------
+        10
+
+
+
+
+SQL> begin
+  2  dbms_output.put_line('the y value is='||change(20));
+  3  end;
+  4  /
+the y value is=20
+
+PL/SQL procedure successfully completed.
+
+
+
+
+
+
+SQL> declare
+  2  res number;
+  3  begin
+  4  res=change(20)+change(30);
+  5  dbms_output.put_line('res value is='||res);
+  6  end;
+  7  /
+res=change(20)+change(30);
+   *
+ERROR at line 4:
+ORA-06550: line 4, column 4:
+PLS-00103: Encountered the symbol "=" when expecting one of the following:
+:= . ( @ % ;
+ORA-06550: line 5, column 1:
+PLS-00103: Encountered the symbol "DBMS_OUTPUT"
+ORA-06550: line 5, column 43:
+PLS-00103: Encountered the symbol ";" when expecting one of the following:
+. ( , * % & - + / at mod rem <an identifier>
+<a double-quoted delimited-identifier> <an exponent (**)> as
+from into || bulk
+
+
+
+
+
+SQL>  declare
+  2   res number;
+  3   begin
+  4  res:=change(20)+change(30);
+  5  dbms_output.put_line('res value is='||res);
+  6  end;
+  7  /
+res value is=50
+
+PL/SQL procedure successfully completed.
+
+
+
+
+
+
+SQL>  create or replace function fact(x in number)
+  2   return number as
+  3   f number:=1;
+  4   begin
+  5   if x=1 then
+  6   return 1;
+  7   else
+  8  f:=x*fact(x-1);
+  9   end if;
+ 10   return f;
+ 11   end;
+ 12   /
+
+Function created.
+
+SQL> select fact(4) from dual;
+
+   FACT(4)
+----------
+        24
+
+SQL> select fact(3) from dual;
+
+   FACT(3)
+----------
+         6
+
+SQL> select fact(5) from dual;
+   FACT(5)
+----------
+       120
+
+SQL>  create or replace function fib(n in number)
+  2  return number as
+  3  f1 number:=0;
+  4  f2 number:=1;
+  5  f3 number;
+  6  begin
+  7  if n=1 then
+  8  return 0;
+  9  elsif n=2 then
+ 10  return 1;
+ 11  else
+ 12  for i in 3..n loop
+ 13  f3:=f1+f2;
+ 14  f1:=f2;
+ 15  f2:=f3;
+ 16  end loop;
+ 17  end if;
+ 18  return f3;
+ 19  end;
+ 20  /
+
+Function created.
+SQL> select fib(5) from dual;
+    FIB(5)
+----------
+         3
+SQL> select fib(8) from dual;
+    FIB(8)
+----------
+        13
+
+SQL> select fib(1) from dual;
+    FIB(1)
+----------
+         0
+SQL> select fib(2) from dual;
+    FIB(2)
+----------
+         1
+SQL> select  fib(3) from dual;
+    FIB(3)
+----------
+         1
+SQL> select fib(4) from dual;
+    FIB(4)
+----------
+         2
+SQL> select  fib(5) from dual;
+    FIB(5)
+----------
+         3
+SQL> select fib(6) from dual;
+    FIB(6)
+----------
+         5

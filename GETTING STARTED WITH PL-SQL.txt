@@ -1,0 +1,46 @@
+EXAMPLE 1
+
+
+declare
+x number;
+begin
+x:=10;
+end;
+/
+
+
+
+
+NOTE: to print expected output on the screen, use the following statement
+      
+"set serveroutput on"
+
+
+EXAMPLE 2
+
+
+
+declare
+x number;
+begin
+x:=10;
+dbms_output.put_line('x value='||x);
+end;
+/
+
+
+
+
+EXAMPLE 3
+
+declare
+a int;
+b int;
+sum int;
+begin
+a:=10;
+b:=25;
+sum:=a+b;
+dbms_output.put_line('result after addition='||sum);
+end;
+/

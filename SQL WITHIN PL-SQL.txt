@@ -1,0 +1,72 @@
+EXAMPLE 1:
+
+declare
+name varchar(30);
+begin
+select dname into name from department where deptno=20;
+dbms_output.put_line('department name='||name);
+exception
+when too_many_rows then
+dbms_output.put_line('more than one department selected');
+when no_data_found then
+dbms_output.put_line('no matching record found');
+end;
+/
+
+
+
+
+
+
+EXAMPLE 2:
+
+declare
+name department.dname%type;
+begin
+select dname into name from department where dloc='hubli';
+dbms_output.put_line('department name='||name);
+exception
+when too_many_rows then
+dbms_output.put_line('more than one departments selected');
+end;
+/
+
+
+
+
+
+
+EXAMPLE 3:
+
+declare
+name department.dname%type;
+location department.dloc%type;
+begin
+select dname,dloc into name,location from department where deptno=30;
+dbms_output.put_line('dept name='||name||'deptlocation='||location);
+exception
+when too_many_rows then
+dbms_output.put_line('more than one matching departments found');
+end;
+/
+
+
+
+
+
+
+EXAMPLE 4:
+
+declare
+name department.dname%type;
+location department.dloc%type;
+begin
+select dname,doc into name,location from department where deptno=100;
+dbms_output.put_line('dept name='||name||'deptlocation='||location);
+exception
+when too_many_rows then
+dbms_output.put_line('more than one matching departments found');
+when no_data_found then
+dbms_output.put_line('no matching record found');
+end;
+/

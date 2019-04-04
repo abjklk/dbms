@@ -1,0 +1,110 @@
+SQL> create or replace procedure p1(x in number)
+    as
+    begin
+    dbms_output.put_line(x);
+    end;
+    /
+
+Procedure created.
+SQL> execute p1(5);
+
+
+PL/SQL procedure successfully completed.
+
+SQL> begin
+  2  p1(45);
+  3  end;
+  4  /
+45
+
+PL/SQL procedure successfully completed.
+
+
+
+
+SQL> create or replace procedure p2(name in varchar2)
+  2  as
+  3  location varchar2(30);
+  4  begin
+  5  select loc into location from department where dname=name;
+  6  dbms_output.put_line('location of dept with name='||name||'is= '||location);
+  7  end;
+  8  /
+
+Procedure created.
+SQL> execute p2('cs');
+location of dept with name=csis= hubli
+PL/SQL procedure successfully completed.
+
+SQL> execute p2('RESEARCH');
+location of dept with name=RESEARCHis= DALLAS
+PL/SQL procedure successfully completed.
+
+
+
+
+
+
+
+
+
+
+
+
+SQL>  create or replace procedure addition(x in number,y in number)
+  2    as
+  3    begin
+  4    if x>y then
+  5    dbms_output.put_line(x||'  is greater');
+  6    else
+  7    dbms_output.put_line('y||' is greater');
+  8    end if;
+  9    end;
+ 10    /
+Warning: Procedure created with compilation errors.
+
+SQL> show errors;
+Errors for PROCEDURE ADDITION:
+LINE/COL ERROR
+-------- -----------------------------------------------------------------
+7/33     PLS-00103: Encountered the symbol "GREATER" when expecting one of
+         the following:
+         not null dangling
+
+
+
+
+
+SQL> create or replace procedure addition(x in number,y in number)
+  2   as
+  3   begin
+  4   if x>y then
+  5   dbms_output.put_line(x||'  is greater');
+  6   else
+  7   dbms_output.put_line(y||' is greater');
+  8  end if;
+  9  end;
+ 10  /
+Procedure created.
+
+SQL> execute addition(34,66);
+66 is greater
+PL/SQL procedure successfully completed.
+SQL> execute addition(12,8);
+12  is greater
+PL/SQL procedure successfully completed.
+SQL> execute addition(33,33);
+33 is greater
+PL/SQL procedure successfully completed.
+SQL> begin
+  2  addition(45,23);
+  3  end;
+  4  /
+45  is greater
+PL/SQL procedure successfully completed.
+SQL> begin 
+  2  addition(56,67);
+  3  end;
+  4  /
+67 is greater
+PL/SQL procedure successfully completed.

@@ -1,0 +1,76 @@
+SQL>  declare
+  2   cursor cur is select dname,loc from department where dname='cs';
+  3   n department.dname%type;
+  4  l department.loc%type;
+  5    begin
+  6    open cur;
+  7  loop
+  8   fetch cur into n,l;
+  9    exit when cur%notfound;
+ 10    dbms_output.put_line('department name='||n||' department location='||l);
+ 11    end loop;
+ 12    close cur;
+ 13    end;
+ 14    /
+
+
+
+
+
+SQL> declare
+  2  s emp.sal%type;
+  3  cursor sal_cur is select sal from emp;
+  4  begin
+  5  open sal_cur;
+  6  for i in 1..5 loop
+  7  fetch sal_cur into s;
+  8  dbms_output.put_line(s);
+  9  end loop;
+ 10  close sal_cur;
+ 11  end;
+ 12  /
+
+
+
+
+
+SQL>  declare
+     s emp.sal%type;
+     cursor sal_cur is select sal from emp order by sal;
+     begin
+     open sal_cur;
+     for i in 1..5 loop
+     fetch sal_cur into s;
+     dbms_output.put_line(s);
+     end loop;
+    close sal_cur;
+    end;
+   /
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*CURSOR TO RETRIEVE THE FIVE HIGHEST SALARIES OF THE EMP RELATION*/
+
+SQL>  declare
+     s emp.sal%type;
+     cursor sal_cur is select sal from emp order by sal desc;
+     begin
+    open sal_cur;
+     for i in 1..5 loop
+     fetch sal_cur into s;
+     dbms_output.put_line(s);
+     end loop;
+    close sal_cur;
+    end;
+    /
+

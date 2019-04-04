@@ -1,0 +1,44 @@
+declare
+x int;
+begin
+x:=5;
+if x>0 then
+dbms_output.put_line('number is positive');
+end if;
+end;
+/
+
+
+
+
+declare 
+age int;
+begin
+age:=23;
+if age>=18 then
+dbms_output.put_line('eligible to vote');
+else
+dbms_output.put_line('not eligible to vote');
+end if;
+end;
+/
+
+
+
+
+
+declare
+marks int;
+begin
+marks:=85;
+if marks>=90 then
+dbms_output.put_line('A grade');
+elsif marks>=80 then
+dbms_output.put_line('B grade');
+elsif marks>=60 then
+dbms_output.put_line('C grade');
+else
+dbms_output.put_line('failed');
+end if;
+end;
+/

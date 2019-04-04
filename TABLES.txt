@@ -1,0 +1,39 @@
+drop tabel department cascade constraint;
+create table department
+(
+
+deptno int primary key,
+dname varchar(30),
+loc varchar(30)
+);
+
+insert into department values(10,'accounting','new york');
+insert into department values(20,'research','dallas');
+insert into department values(30,'sales','chicago');
+insert into department values(40,'operations','boston');
+insert into department values(50,'','hubli');
+insert into department values(60,'cs','hubli');
+insert into department values(70,'comp','hubli');
+
+
+
+drop tabel emp cascade constraint;
+create table emp
+(
+ename varchar(30),
+ssn int primary key,
+sal number(8,2)
+);
+
+
+insert into emp values('ram',1,2500);
+insert into emp values('sita',2,3000);
+insert into emp values('geeta',3,1250);
+insert into emp values('ramesh',4,3250);
+insert into emp values('rakesh',5,5000);
+insert into emp values('sangeeta',6,2700);
+insert into emp values('sameeksha',7,4250);
+insert into emp values('ram',8,6000);
+
+
+
