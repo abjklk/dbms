@@ -1,4 +1,3 @@
-drop tabel department cascade constraint;
 create table department
 (
 
@@ -17,7 +16,7 @@ insert into department values(70,'comp','hubli');
 
 
 
-drop tabel emp cascade constraint;
+
 create table emp
 (
 ename varchar(30),

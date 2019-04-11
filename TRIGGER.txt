@@ -1,0 +1,77 @@
+create table emp
+(
+	ename varchar(30),
+	ssn int primary key,
+        sal number
+);
+
+drop table emp cascade constraint;
+
+insert into emp values('ram',1,2500);
+insert into emp values('sita',2,3000);
+insert into emp values('geeta',3,1250);
+insert into emp values('ramesh',4,3250);
+insert into emp values('rakesh',5,5000);
+insert into emp values('sangeeta',6,2700);
+insert into emp values('sameeksha',7,4250);
+insert into emp values('ram',8,6000);
+
+create table emp_log
+(
+  essn int,
+  new_sal number(8,2)
+);
+  
+  desc emp_log;
+  
+create table deleted_emp
+(
+  dename varchar(30),
+  dssn int,
+  dsal number(8,2)
+);
+
+
+create table salup
+(
+  ssn int,
+  old_sal number(8,2),
+  new_sal number(8,2),
+  account varchar(50)
+);
+
+create table te
+(
+  ename varchar(30),
+  ssn int primary key,
+  sal number(8,2)
+);
+
+
+
+
+
+
+
+
+create table salup
+(
+  ssn int,
+  acc varchar(50),
+  new_sal number(8,2),
+  old_sal number(8,2),
+  dofupdation date
+);
+
+
+desc salup;
+
+
+
+
+
+
+
+
+
+

@@ -40,9 +40,9 @@ EXAMPLE 3:
 
 declare
 name department.dname%type;
-location department.dloc%type;
+location department.loc%type;
 begin
-select dname,dloc into name,location from department where deptno=30;
+select dname,loc into name,location from department where deptno=30;
 dbms_output.put_line('dept name='||name||'deptlocation='||location);
 exception
 when too_many_rows then
@@ -59,9 +59,9 @@ EXAMPLE 4:
 
 declare
 name department.dname%type;
-location department.dloc%type;
+location department.loc%type;
 begin
-select dname,doc into name,location from department where deptno=100;
+select dname,loc into name,location from department where deptno=100;
 dbms_output.put_line('dept name='||name||'deptlocation='||location);
 exception
 when too_many_rows then

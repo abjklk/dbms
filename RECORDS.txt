@@ -1,16 +1,37 @@
-      SQL> set serveroutput on;
-      SQL>   declare 
-      type  dep  is  record
+ set serveroutput on;
+
+Example 1:
+declare 
+type  dep  is  record
+(
+   dno int,
+   name  varchar2(33)
+);
+d  dep;
+begin
+select deptno,dname into d  from department where dname='cs';
+dbms_output.put_line('department no='||d.dno||' and dept name='||d.name);
+end;
+/
+
+-----------------------------------------------------------------------------------------
+Example 2:
+   
+   declare 
+      type dep is record
       (
-      dno int,
-      name  varchar2(33)
-      );
-      d  dep;
+     dno int,
+      name varchar2(33)
+     );
+      d dep;
        begin
-       select deptno,dname into d  from department where dname='cs';
-       dbms_output.put_line('department no='||d.dno||' and dept name='||d.name);
-       end;
-       /
+    select deptno,dname into d  from department where dname='cs';
+    dbms_output.put_line('department no='||d.dno||' and dept name='||d.name);
+  exception
+   when too_many_rows then
+   dbms_output.put_line('more than one row returned');
+  end;
+   /
 
 
 
@@ -19,206 +40,137 @@
 
 
 
+=========================================================================================================
+Example 3:
 
-
-
-SQL>   declare 
-  2    type dep is record
-  3    (
-  4    dno int,
-  5    name varchar2(33)
-  6   );
-  7    d dep;
-  8     begin
-  9  select deptno,dname into d  from department where dname='cs';
- 10    dbms_output.put_line('department no='||d.dno||' and dept name='||d.name);
- 11      end;
- 12      /
   declare
-ERROR at line 1:
-ORA-01422: exact fetch returns more than requested number of rows
-ORA-06512: at line 9
+    dep department%rowtype;
+    begin
+     select * into dep from department where dname='sales';
+    dbms_output.put_line('deptno='||dep.deptno||' dname='||dep.dname||' loc='||dep.loc);
+    end;
+     /
+
+
+=========================================================================================================
+Example 4:  
+declare
+     dep department%rowtype;
+     begin
+     select * into dep from department where dname='sales';
+     dbms_output.put_line('deptno='||dep.deptno||' dname='||dep.dname||' loc='||dep.loc);
+    exception
+    when too_many_rows then
+    dbms_output.put_line('more than one row present');
+    end;
+   /
+
+=========================================================================================================
+Example 5: 
+
+  declare
+     type dep is record
+     (
+     dno department.deptno%type,
+     location department.loc%type
+    );
+     d dep;
+     begin
+     select deptno,loc into d.dno,d.location from department where dname='sales';
+    dbms_output.put_line('deptno='||d.dno||' loc='||d.location);
+    exception
+      when too_many_rows then
+      dbms_output.put_line('more than one row present');
+      end;
+      /
+
+
+=========================================================================================================
+Example 6: 
+
+  declare
+     type dep is record
+     (
+     dno department.deptno%type,
+     loc department.loc%type,
+    name department.dname%type
+    );
+     d dep;
+     num department.deptno%type;
+    l department.loc%type;
+  name department.dname%type;
+   begin
+   select * into d from department where dname='SALES';
+   num:=d.dno;
+   l:=d.loc;
+  name:=d.name;
+      dbms_output.put_line('deptnum='||num||' dept location='||l||' dept name='||name);
+      exception
+      when no_data_found then
+      dbms_output.put_line('no matching records found');
+      when too_many_rows then
+      dbms_output.put_line('more than one matching record found');
+     end;
+     /
 
 
 
+=========================================================================================================
+Example 7: 
 
 
-
-SQL>   declare 
-  2    type dep is record
-  3    (
-  4    dno int,
-  5    name varchar2(33)
-  6   );
-  7    d dep;
-  8     begin
-  9  select deptno,dname into d  from department where dname='cs';
- 10    dbms_output.put_line('department no='||d.dno||' and dept name='||d.name);
- 11  exception
- 12  when too_many_rows then
- 13  dbms_output.put_line('more than one row returned');
- 14  end;
- 15  /
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-SQL>  declare
-  2   dep department%rowtype;
-  3   begin
-  4   select * into dep from department where dname='SALES';
-  5   dbms_output.put_line('deptno='||dep.deptno||' dname='||dep.dname||' loc='||dep.loc);
-  6   end;
-  7   /
-
-
-
-
-
-
-
-
-SQL>  declare
-  2   dep department%rowtype;
-  3   begin
-  4   select * into dep from department where dname='SALES';
-  5   dbms_output.put_line('deptno='||dep.deptno||' dname='||dep.dname||' loc='||dep.loc);
-  6  exception
-  7  when too_many_rows then
-  8  dbms_output.put_line('more than one row present');
-  9  end;
- 10  /
-
-
-
-
-SQL>  declare
-  2   dep department%rowtype;
-  3   begin
-  4   select * into dep from department where dname='cs';
-  5    dbms_output.put_line('deptno='||dep.deptno||' dname='||dep.dname||' loc='||dep.lo
-  6   exception
-  7   when too_many_rows then
-  8   dbms_output.put_line('more than one row present');
-  9   end;
- 10   /
-
-
-
-
-
-
-SQL>  declare
-  2   type dep is record
-  3   (
-  4   dno department.deptno%type,
-  5   location department.loc%type
-  6  );
-  7   d dep;
-  8   begin
-  9   select deptno,loc into d.dno,d.location from department where dname='SALES';
- 10   dbms_output.put_line('deptno='||d.dno||' loc='||d.location);
- 11   exception
- 12     when too_many_rows then
- 13     dbms_output.put_line('more than one row present');
- 14     end;
- 15     /
-
-
-
-
-
-SQL>  declare
-  2   type dep is record
-  3   (
-  4   dno department.deptno%type,
-  5   loc department.loc%type,
-  6  name department.dname%type
-  7  );
-  8   d dep;
-  9   num department.deptno%type;
- 10   l department.loc%type;
- 11  name department.dname%type;
- 12  begin
- 13  select * into d from department where dname='SALES';
- 14   num:=d.dno;
- 15   l:=d.loc;
- 16  name:=d.name;
- 17     dbms_output.put_line('deptnum='||num||' dept location='||l||' dept name='||name);
- 18     exception
- 19     when no_data_found then
- 20     dbms_output.put_line('no matching records found');
- 21     when too_many_rows then
- 22     dbms_output.put_line('more than one matching record found');
- 23     end;
- 24    /
-
-
-
-
-
-SQL>  declare
-  2   type dep is record
-  3   (
-  4   dno department.deptno%type,
-  5   loc department.loc%type,
-  6  name department.dname%type
-  7  );
-  8   d dep;
-  9   num department.deptno%type;
- 10   l department.loc%type;
- 11  name department.dname%type;
- 12  begin
- 13  select * into d from department where dname='computerscience';  
+  declare
+     type dep is record
+     (
+     dno department.deptno%type,
+     loc department.loc%type,
+    name department.dname%type
+    );
+     d dep;
+     num department.deptno%type;
+    l department.loc%type;
+   name department.dname%type;
+   begin
+   select * into d from department where dname='computerscience';  
        num:=d.dno;
- 14    l:=d.loc;
- 15   name:=d.name;
- 16      dbms_output.put_line('deptnum='||num||' dept location='||l||' dept name='||name);
- 17      exception
- 18      when no_data_found then
- 19      dbms_output.put_line('no matching records found');
- 20      when too_many_rows then
- 21      dbms_output.put_line('more than one matching record found');
- 22      end;
- 23     /
+     l:=d.loc;
+   name:=d.name;
+       dbms_output.put_line('deptnum='||num||' dept location='||l||' dept name='||name);
+       exception
+       when no_data_found then
+       dbms_output.put_line('no matching records found');
+       when too_many_rows then
+       dbms_output.put_line('more than one matching record found');
+       end;
+      /
 
 
 
+=========================================================================================================
+Example 8: 
 
 
-SQL>  declare
-  2   type dep is record
-  3   (
-  4   dno department.deptno%type,
-  5   loc department.loc%type,
-  6  name department.dname%type
-  7  );
-  8   d dep;
-  9   num department.deptno%type;
- 10   l department.loc%type;
- 11  name department.dname%type;
- 12  begin
- 13  select * into d from department where dname='cs';
- 14   num:=d.dno;
- 15     l:=d.loc;
- 16    name:=d.name;
- 17       dbms_output.put_line('deptnum='||num||' dept location='||l||' dept name='||name);
- 18       exception
- 19       when  no_data_found  then
- 20       dbms_output.put_line('no matching records found');
- 21       when too_many_rows then
- 22       dbms_output.put_line('more than one matching record found');
- 23       end;
- 24      /
+  declare
+     type dep is record
+     (
+    dno department.deptno%type,
+     loc department.loc%type,
+    name department.dname%type
+    );
+     d dep;
+     num department.deptno%type;
+    l department.loc%type;
+   name department.dname%type;
+   begin
+   select * into d from department where dname='cs';
+    num:=d.dno;
+      l:=d.loc;
+     name:=d.name;
+        dbms_output.put_line('deptnum='||num||' dept location='||l||' dept name='||name);
+        exception
+        when  no_data_found  then
+       dbms_output.put_line('no matching records found');
+        when too_many_rows then
+        dbms_output.put_line('more than one matching record found');
+        end;
+       /

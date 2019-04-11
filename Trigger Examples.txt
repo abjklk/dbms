@@ -1,0 +1,750 @@
+SQL> select * from emp;
+ENAME                                 SSN        SAL
+------------------------------ ---------- ----------
+ram                                     1       2500
+sita                                    2       3000
+geeta                                   3       1250
+ramesh                                  4       3250
+rakesh                                  5       5000
+sangeeta                                6       2700
+sameeksha                               7       4250
+ram                                     8       6000
+
+8 rows selected.
+
+SQL>  create table emp_log
+  2   (
+  3   essn int,
+  4  new_sal number(8,2)
+  5  );
+
+Table created.
+
+SQL> commit;
+
+Commit complete.
+
+
+
+ create or replace trigger sal_change
+    after update of sal on emp
+    for each row
+    begin
+    insert into emp_log values(:new.emp.ssn,:new.emp.sal);
+    end;
+    /
+
+Warning: Trigger created with compilation errors.
+
+SQL> show errors;
+Errors for TRIGGER SAL_CHANGE:
+LINE/COL ERROR
+-------- -----------------------------------------------------------------
+2/28     PLS-00049: bad bind variable 'NEW.EMP'
+2/41     PLS-00049: bad bind variable 'NEW.EMP'
+
+
+
+Example 1:
+ create or replace trigger sal_change
+    after update of sal on emp
+    for each row
+    begin
+     insert into emp_log values(:new.ssn,:new.sal);
+    end;
+    /
+Trigger created.
+
+SQL> select * from emp;
+ENAME                                 SSN        SAL
+------------------------------ ---------- ----------
+ram                                     1       2500
+sita                                    2       3000
+geeta                                   3       1250
+ramesh                                  4       3250
+rakesh                                  5       5000
+sangeeta                                6       2700
+sameeksha                               7       4250
+ram                                     8       6000
+
+8 rows selected.
+
+===========================================================
+SQL> select * from emp_log;
+
+no rows selected
+
+==============================================================
+
+SQL> update emp set sal=10000 where ssn=1;
+1 row updated.
+SQL> select * from emp_log;
+      ESSN    NEW_SAL
+---------- ----------
+         1      10000
+
+===========================================================
+SQL> select * from emp_log;
+      ESSN    NEW_SAL
+---------- ----------
+         1      10000
+
+SQL> alter table emp_log add old_sal number(8,2);
+Table altered.
+SQL> select * from emp_log;
+      ESSN    NEW_SAL    OLD_SAL
+         1      10000
+SQL> drop trigger sal_change;
+Trigger dropped.
+
+
+===================================================================
+
+Example 2:
+  create or replace trigger sal_change
+     after update of sal on emp
+     for each row
+     begin
+    insert into emp_log values(:new.ssn,:new.sal,:old.sal);
+    end;
+    /
+
+Trigger created.
+
+
+SQL> select * from emp;
+ENAME                                 SSN        SAL
+ram                                     1      10000
+sita                                    2       3000
+geeta                                   3       1250
+ramesh                                  4       3250
+rakesh                                  5       5000
+sangeeta                                6       2700
+sameeksha                               7       4250
+ram                                     8       6000
+8 rows selected.
+
+SQL> select * from emp_log;
+      ESSN    NEW_SAL    OLD_SAL
+---------- ---------- ----------
+         1      10000
+SQL> update emp set sal=30000 where ssn=2;
+1 row updated.
+SQL> select * from emp;
+ENAME                                 SSN        SAL
+------------------------------ ---------- ----------
+ram                                     1      10000
+sita                                    2      30000
+geeta                                   3       1250
+ramesh                                  4       3250
+rakesh                                  5       5000
+sangeeta                                6       2700
+sameeksha                               7       4250
+ram                                     8       6000
+8 rows selected.
+
+SQL> select * from emp_log;
+      ESSN    NEW_SAL    OLD_SAL
+---------- ---------- ----------
+         1      10000
+         2      30000       3000
+
+==========================================================================================
+
+ create or replace trigger t
+    before insert or delete or update on emp
+    begin
+    case 
+    when inserting then
+    dbms_output.put_line('inserted');
+    when deleting then
+    dbms_output.put_line('deleted');
+    when updating then
+   dbms_output.put_line('updated');
+   end case;
+   end;
+   /
+
+Trigger created.
+SQL> set serveroutput on;
+SQL> select * from emp;
+ENAME                                 SSN        SAL
+------------------------------ ---------- ----------
+ram                                     1      10000
+sita                                    2      30000
+geeta                                   3       1250
+ramesh                                  4       3250
+rakesh                                  5       5000
+sangeeta                                6       2700
+sameeksha                               7       4250
+ram                                     8       6000
+8 rows selected.
+
+SQL> delete from emp where ssn=8;
+deleted
+1 row deleted.
+
+
+
+==================================================================================
+ create or replace trigger t
+    before insert or delete or update on emp
+    begin
+    case 
+    when inserting then
+    dbms_output.put_line('inserted');
+    when deleting then
+    dbms_output.put_line('deleted');
+    when updating then
+   dbms_output.put_line('updated');
+   end case;
+   end;
+   /
+Trigger created.
+SQL> set serveroutput on;
+
+
+
+
+
+
+
+
+
+SQL> select * from emp;
+ENAME                                 SSN        SAL
+------------------------------ ---------- ----------
+ram                                     1      10000
+sita                                    2      30000
+geeta                                   3       1250
+ramesh                                  4       3250
+rakesh                                  5       5000
+sangeeta                                6       2700
+sameeksha                               7       4250
+ram                                     8       6000
+8 rows selected.
+SQL> delete from emp where ssn=8;
+deleted
+1 row deleted.
+
+
+
+
+
+
+
+
+
+====================================================================================
+
+
+
+  create or replace trigger t
+   after  insert or delete or update on emp
+     begin
+     case 
+     when inserting then
+     dbms_output.put_line('inserted');
+     when deleting then
+     dbms_output.put_line('deleted');
+     when updating then
+    dbms_output.put_line('updated');
+    end case;
+    end;
+    /
+Trigger created.
+SQL> delete from emp where ssn=7;
+deleted
+1 row deleted.
+SQL> select * from emp;
+ENAME                                 SSN        SAL
+------------------------------ ---------- ----------
+ram                                     1      10000
+sita                                    2      30000
+geeta                                   3       1250
+ramesh                                  4       3250
+rakesh                                  5       5000
+sangeeta                                6       2700
+6 rows selected.
+
+SQL> rollback;
+Rollback complete.
+
+=====================================================================================================
+ create table deleted_emp
+    (
+    dename varchar(30),
+    dssn int,
+    dsal number(8,2)
+    );
+Table created.
+
+ create or replace trigger del_emp
+   after delete on emp
+    begin
+   insert into deleted_emp values(:old.ename,:old.ssn,:old.sal);
+    select * from deleted_emp;
+    end;
+    /
+
+
+create or replace trigger del_emp
+                          *
+ERROR at line 1:
+ORA-04082: NEW or OLD references not allowed in table level triggers
+
+
+
+
+  create or replace trigger del_emp
+     after delete on emp
+    for each row
+     begin
+     insert into deleted_emp values(:old.ename,:old.ssn,:old.sal
+     select * from deleted_emp;
+     end;
+    /
+
+Warning: Trigger created with compilation errors.
+SQL> show errors;
+Errors for TRIGGER DEL_EMP:
+LINE/COL ERROR
+-------- -----------------------------------------------------------------
+2/2      PL/SQL: SQL Statement ignored
+3/2      PL/SQL: ORA-00917: missing comma
+
+   create or replace trigger del_emp
+      after delete on emp
+     for each row
+      begin
+      insert into deleted_emp values(:old.ename,:old.ssn,:old.sal);
+    end;
+    /
+
+Trigger created.
+
+
+
+SQL> select * from emp;
+ENAME                                 SSN        SAL
+------------------------------ ---------- ----------
+ram                                     1      10000
+sita                                    2      30000
+geeta                                   3       1250
+ramesh                                  4       3250
+rakesh                                  5       5000
+sangeeta                                6       2700
+sameeksha                               7       4250
+7 rows selected.
+
+SQL> select * from deleted_emp;
+no rows selected
+
+SQL> delete from emp where ssn=7;
+deleted
+
+1 row deleted.
+SQL> select * from deleted_emp;
+DENAME                               DSSN       DSAL
+------------------------------ ---------- ----------
+sameeksha                               7       4250
+
+
+
+
+
+
+
+SQL> select * from emp;
+ENAME                                 SSN        SAL
+------------------------------ ---------- ----------
+ram                                     1      10000
+sita                                    2      30000
+geeta                                   3       1250
+ramesh                                  4       3250
+rakesh                                  5       5000
+sangeeta                                6       2700
+6 rows selected.
+
+SQL> alter table deleted_emp add date_deleted date;
+Table altered.
+
+SQL> rollback;
+Rollback complete.
+
+SQL> select * from emp;
+ENAME                                 SSN        SAL
+------------------------------ ---------- ----------
+ram                                     1      10000
+sita                                    2      30000
+geeta                                   3       1250
+ramesh                                  4       3250
+rakesh                                  5       5000
+sangeeta                                6       2700
+
+6 rows selected.
+
+
+
+  create or replace trigger del_emp
+     after delete on emp
+    for each row
+     begin
+     insert into deleted_emp values(:old.ename,:old.ssn,:old.sal,sysdate);
+    end;
+    /
+Trigger created.
+
+SQL> select * from emp;
+ENAME                                 SSN        SAL
+------------------------------ ---------- ----------
+ram                                     1      10000
+sita                                    2      30000
+geeta                                   3       1250
+ramesh                                  4       3250
+rakesh                                  5       5000
+sangeeta                                6       2700
+6 rows selected.
+
+SQL> select * from deleted_emp;
+DENAME                               DSSN       DSAL DATE_DELE
+------------------------------ ---------- ---------- ---------
+sameeksha                               7       4250
+
+
+
+
+SQL> delete from emp where ssn=6;
+deleted
+1 row deleted.
+
+SQL> select * from deleted_emp;
+DENAME                               DSSN       DSAL DATE_DELE
+------------------------------ ---------- ---------- ---------
+sameeksha                               7       4250
+sangeeta                                6       2700 		01-JAN-06
+
+
+ create table salup
+    (
+    ssn int,
+    old_sal number(8,2),
+    new_sal number(8,2),
+    account varchar(50)
+    );
+
+Table created.
+
+
+
+  create or replace trigger tu
+     after update of sal on emp
+     for each row
+    begin
+    insert into salup values(:new.ssn,:old.sal,:new.sal,user);
+    end;
+    /
+Trigger created.
+
+SQL> select * from emp;
+ENAME                                 SSN        SAL
+------------------------------ ---------- ----------
+ram                                     1      10000
+sita                                    2      30000
+geeta                                   3       1250
+ramesh                                  4       3250
+rakesh                                  5      50000
+
+SQL> update emp set sal=1000 where ssn=1;
+1 row updated.
+
+
+
+
+
+
+SQL> select * from emp;
+ENAME                                 SSN        SAL
+------------------------------ ---------- ----------
+ram                                     1       1000
+sita                                    2      30000
+geeta                                   3       1250
+ramesh                                  4       3250
+rakesh                                  5      50000
+
+SQL> select * from salup;
+       SSN    OLD_SAL    NEW_SAL		ACCOUNT
+         1      10000       1000		SCOTT
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ create table te
+    (
+    ename varchar(30),
+    ssn int primary key,
+    sal number(8,2)
+    );
+
+Table created.
+
+  create table salup
+     (
+     ssn int,
+     acc varchar(50),
+     new_sal number(8,2),
+     old_sal number(8,2),
+     dofupdation date);
+
+Table created.
+
+SQL> insert into te values('ram',1,10000);
+
+1 row created.
+
+SQL> select * from te;
+
+ENAME                                 SSN        SAL
+------------------------------ ---------- ----------
+ram                                     1      10000
+
+ create or replace trigger ts
+    after update of sal on te
+    for each row
+    begin
+    insert into salup values(:new.ssn,user,:new.sal,:old.sal,sysdate);
+    end;
+    /
+
+Trigger created.
+
+SQL> select * from salup;
+
+no rows selected
+
+SQL> update te set sal=1000 where ssn=1;
+
+1 row updated.
+
+SQL> select * from salup;
+
+ SSN      ACC   NEW_SAL   OLD_SAL         DOFUPDATI
+
+  1      SCOTT    1000     10000         14-OCT-14
+
+
+  create or replace trigger t
+     after update of sal on te
+     for each row
+     declare
+    d salup%rowtype;
+     cursor c is  select * from salup;
+     begin
+     insert into salup values(:new.ssn,user,:new.sal,:old.sal,sysdate);
+      open c;
+     loop
+     fetch c into d;
+     exit when c%notfound;
+       dbms_output.put_line('newssn='||d.ssn);
+      dbms_output.put_line('username='||d.acc);
+      dbms_output.put_line('newsalary='||d.new_sal);
+       dbms_output.put_line('oldsalary='||d.old_sal);
+      dbms_output.put_line('date of modification='||d.dofupdation);
+    end loop;
+   close c;
+   end;
+   /
+
+Trigger created.
+
+SQL> select * from te;
+
+ENAME                                 SSN        SAL
+------------------------------ ---------- ----------
+ram                                     1       1000
+
+
+
+ set serveroutput on;
+
+
+
+
+
+
+SQL> select * from te;
+
+ENAME                                 SSN        SAL
+------------------------------ ---------- ----------
+ram                                     1      10000
+
+
+SQL> select * from salup;
+
+SSN         ACC     NEW_SAL   OLD_SAL         DOFUPDATI
+
+1         SCOTT      10000     1000         	14-OCT-14
+
+
+SQL> update te set sal=1000 where ssn=1;
+
+newssn=1
+username=SCOTT
+newsalary=10000
+oldsalary=1000
+date of modification=14-OCT-14
+
+newssn=1
+username=SCOTT
+newsalary=1000
+oldsalary=10000
+date of modification=14-OCT-14
+
+1 row updated.
+
+SQL> select * from salup;
+
+SSN 		ACC     NEW_SAL   OLD_SAL 		DOFUPDATI
+ 1 		SCOTT   10000	     1000 		14-OCT-14
+
+ 1 		SCOTT   1000		10000 		14-OCT-14
+
+
+
+
+
+
+
+
+
+
+
+
+
+SQL> update te set sal=2000 where ssn=1;
+
+newssn=1
+username=SCOTT
+newsalary=10000
+oldsalary=1000
+date of modification=14-OCT-14
+
+newssn=1
+username=SCOTT
+newsalary=1000
+oldsalary=10000
+date of modification=14-OCT-14
+
+newssn=1
+username=SCOTT
+newsalary=2000
+oldsalary=1000
+date of modification=14-OCT-14
+
+1 row updated.
+
+SQL> select *from salup;
+
+SSN 		ACC      NEW_SAL   OLD_SAL 	DOFUPDATI
+ 1 		SCOTT    10000	      1000 		14-OCT-14
+
+ 1 		SCOTT    1000	       10000 		14-OCT-14
+
+ 1 		SCOTT    2000        1000 		14-OCT-14
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+SQL> create or replace trigger t
+  2    after update of sal on te
+  3    for each row
+  4    declare
+  5   d salup%rowtype;
+  6    cursor c is  select * from salup;
+  7    begin
+  8    insert into salup values(:new.ssn,user,:new.sal,:old.sal,sysdate);
+  9     open c;
+ 10     loop
+ 11     fetch c into d;
+ 12     exit when c%notfound;
+ 13      
+dbms_output.put_line('newssn='||d.ssn||chr(10)||'username='||d.acc||chr(10)||'newsalary='|
+|d.new_sal||chr(10)||'oldsalary='||d.old_sal||chr(10)||'date of
+modification='||d.dofupdation);
+ 14   end loop;
+ 15   close c;
+ 16   end;
+ 17   /
+
+Trigger created.
+
+
+SQL> update te set sal=3000 where ssn=1;
+
+newssn=1
+username=SCOTT
+newsalary=10000
+oldsalary=1000
+date of
+modification=14-OCT-14
+newssn=1
+username=SCOTT
+newsalary=1000
+oldsalary=10000
+date of
+modification=14-OCT-14
+newssn=1
+username=SCOTT
+newsalary=2000
+oldsalary=1000
+date of
+modification=14-OCT-14
+newssn=1
+username=SCOTT
+newsalary=3000
+oldsalary=2000
+date of
+modification=14-OCT-14
+
+1 row updated.
+
+SQL> select * from salup;
+
+SSN 		ACC     NEW_SAL   OLD_SAL 		DOFUPDATI
+ 1 		SCOTT    10000   	  1000 		14-OCT-14
+
+ 1 		SCOTT    1000      10000 		14-OCT-14
+
+ 1 		SCOTT  	2000      1000 		14-OCT-14
+
+ 1 		SCOTT    3000      2000 		14-OCT-14
+
+
